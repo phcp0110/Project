@@ -1,0 +1,5 @@
+2025-05-22 15:19:11,050 — INFO — Mols_shape: (30000,)
+2025-05-22 15:19:11,053 — INFO — Features_shape: None
+2025-05-22 15:19:11,054 — INFO — Labels_shape: None
+2025-05-22 16:20:44,868 — ERROR — Failed to featurize None. Appending empty array
+2025-05-22 16:20:44,870 — ERROR — Exception message: 'NoneType' object is not iterable
