@@ -58,7 +58,8 @@ def normalize_similarity_matrix(similarity_matrix):
         numpy array : Normalized similarity matrix.
     """
     max_val = np.max(similarity_matrix)
-    min_val = np.min(similarity_matrix)
+    # min_val = np.min(similarity_matrix)
+    min_val = 0
  
     # Handle the case where max_val and min_val are the same to avoid division by zero
     if max_val == min_val:
