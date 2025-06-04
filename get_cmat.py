@@ -1,3 +1,4 @@
+
 from tqdm import tqdm
 import numpy as np
 
@@ -177,9 +178,10 @@ if __name__ == "__main__":
     from deepmol.tokenizers import NPBERTTokenizer
     import os
     from deepmol.compound_featurization import LLM
-    from transformers import BertConfig, BertModel
+    from transformers import BertConfig, BertModel 
+    
 
-# Load data from CSV file
+ #Load data from CSV file
     loader = CSVLoader(dataset_path='amostras_30000.csv',
                    smiles_field='smiles',
                    id_field='ids',
@@ -196,8 +198,8 @@ if __name__ == "__main__":
                 3: "MHFP", 
                 4: "MorganFingerprint",
                 5: "NPBert"
-        }
-                )
+        } 
+               ) 
     
     with open("similarities.pkl", "rb") as f:
         similarity_matrix = pickle.load(f)
