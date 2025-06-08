@@ -120,7 +120,10 @@ random_state: random seed
         featurizer.featurize(dataset, inplace=True)
         dataset.to_csv(f"{featurizer.__class__.__name__}_fp.csv")
 
-        distances = compute_all_distances(dataset) # Calcula todas as similaridades entre as moleculas 
+        distances = compute_all_distances(dataset) # Calcula todas as similaridades entre as moleculas
+        max_value = np.max(distances)
+        np.save(f"{featurizer.__class__.__name__}_distance_max_value.txt", max_value) 
+           
         similarities = normalize_similarity_matrix(distances) # Normaliza esses valores
 
         similarity_matrices.append(similarities) # Guarda as similaridades de cada método
