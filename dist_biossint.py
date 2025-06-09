@@ -13,7 +13,7 @@ from rdkit import Chem
 from tqdm import tqdm
 
 
-from biosynfoni import fingerprints as fp
+
 
 
 def compound_graph(reaction_info: pd.DataFrame) -> nx.DiGraph:  #cria o grafo 
@@ -50,8 +50,7 @@ def generate_reaction_chains(pathways: pd.DataFrame) -> dict:
 
 
 # =========================== GLOBALS =========================
-
-
+'''
 SIM_FUNCTIONS = {
     "c_tanimoto": fp.countanimoto,
     "cosine_sim": fp.cosine_sim,
@@ -59,7 +58,7 @@ SIM_FUNCTIONS = {
     "tanimoto_sim": fp.tanimoto_sim,
     "euclidean_sim": fp.euclidean_sim,
 }
-
+'''
 # =============================================================================
 
 
@@ -115,7 +114,7 @@ def pairs_per_separation(chains: dict, max_separation: int) -> pd.DataFrame:
     # as category to reduce the time to map fingerprints
     return pd.concat([pairs_records, random_pairs], axis=0).astype("category")
 
-
+'''
 def all_similarity_scores(
     pairs_df: pd.DataFrame,
     id_to_fps: dict,
@@ -148,14 +147,14 @@ def all_similarity_scores(
     # drop rows for which all fp_names are nan
     return pairs_df.dropna(subset=fp_names, how="all")
     # return pairs_df
-
+'''
 
 def _chain_from_sim_matrix(sim_matrix, start=None):
     if start is None:
         start = np.argmin(sim_matrix.sum(axis=1))
     return np.argsort(sim_matrix[start])[::-1]
 
-
+'''
 def reconstruct_pathway(pathway_chain, id_to_fp):
     right_order = pathway_chain
     random_order = np.random.permutation(pathway_chain)
@@ -212,7 +211,7 @@ def reconstruct_pathway(pathway_chain, id_to_fp):
             }
         )
     return reconstructions
-
+'''
 
 def num_chains_per_length(pw_chains):
     lengths = [i for i in range(11)]
