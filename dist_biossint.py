@@ -41,10 +41,11 @@ def longest_path(pathway_graph) -> list: # calcula o caminho mais longo
 
 
 def generate_reaction_chains(pathways: pd.DataFrame) -> dict:
-    longest_paths = {
-        pathway_id: longest_path(compound_graph(reaction_info))
-        for pathway_id, reaction_info in pathways.groupby("pathway_id")
-    }
+    longest_paths = {}
+    for pathway_id, reaction_info in tqdm(pathways.groupby("pathway_id")):
+        if pathway_id.lower() != "unknown":
+            longest_paths[pathway_id] = longest_path(compound_graph(reaction_info))
+          
     return longest_paths
     # return pd.DataFrame.from_dict(longest_paths, orient="index")
 
@@ -94,7 +95,7 @@ def pairs_per_separation(chains: dict, max_separation: int) -> pd.DataFrame:
     """returns a dataframe with all pairs separated by separation (i.e. amount
     of biosynthetic steps between compounds) in chain_indexes"""
     pairs_records = []
-    for sep in range(1, max_separation + 1):
+    for sep in tqdm(range(1, max_separation + 1)):
         pairs = {
             pid: list(_generate_pairs(chain, sep)) for pid, chain in chains.items()
         }
@@ -216,7 +217,7 @@ def reconstruct_pathway(pathway_chain, id_to_fp):
 def num_chains_per_length(pw_chains):
     lengths = [i for i in range(11)]
     num_chains = []
-    for i in lengths:
+    for i in tqdm(lengths):
         chain_length = i
         pw_chains = {k: v for k, v in pw_chains.items() if len(v) > chain_length}
         num_chains.append(len(pw_chains))
@@ -243,7 +244,7 @@ def main():
 
     
     num_chains_per_length(pw_chains)
-    pw_chains = {k: v for k, v in pw_chains.items() if len(v) > chain_length}
+    pw_chains = {k: v for k, v in tqdm(pw_chains.items()) if len(v) > chain_length}
     pairs_df = pairs_per_separation(pw_chains, max_separation=chain_length)
     
     

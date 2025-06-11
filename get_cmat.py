@@ -3,23 +3,28 @@ from tqdm import tqdm
 import numpy as np
 
 
-def manhattan_distance(x, y):
+def cosine_similarity(x, y):
     """
-    Compute Manhattan distance between two vectors.
+    Compute cosine similarity between two vectors.
     Parameters:
         x, y : array-like
             Input vectors (must be the same length).
     Returns:
-        float : Distance score.
+        float : Similarity score between 0 and 1.
     """
     x = np.array(x)
     y = np.array(y)
- 
-    distance = np.sum(np.abs(x - y))
- 
-    return distance
+    
+    dot_product = np.dot(x, y)
+    norm_product = np.linalg.norm(x) * np.linalg.norm(y)
+    
+    if norm_product == 0:
+        return np.nan  
+    
+    return dot_product / norm_product
 
-def compute_all_distances(dataset):
+
+def compute_all_similarities(dataset):
     """
     Compute all pairwise similarities in the dataset.
     Parameters:
@@ -39,36 +44,17 @@ def compute_all_distances(dataset):
     count = 0
 
     # Loop over all unique pairs (skip redundant comparisons)
-    for i in tqdm(range(n_samples - 1), desc="Computing distances"):
+    for i in tqdm(range(n_samples - 1), desc="Computing similarities"):
         for j in range(i + 1, n_samples):
-            # Calculate similarity as 1 - Jaccard distance
-            distances[0, count] = manhattan_distance(fp[i, :], fp[j, :])
+            
+            distances[0, count] = cosine_similarity(fp[i, :], fp[j, :])
             count += 1
 
     return distances
 
 import numpy as np
 
-def normalize_similarity_matrix(similarity_matrix):
-    """
-    Normalize the similarity matrix to a range of [0, 1].
-    Parameters:
-        similarity_matrix : numpy array
-            The similarity matrix to normalize.
-    Returns:
-        numpy array : Normalized similarity matrix.
-    """
-    max_val = np.max(similarity_matrix)
-    # min_val = np.min(similarity_matrix)
-    min_val = 0
- 
-    # Handle the case where max_val and min_val are the same to avoid division by zero
-    if max_val == min_val:
-        return np.ones_like(similarity_matrix) * 0.5  # or any other default value
- 
-    normalized_matrix = (similarity_matrix - min_val) / (max_val - min_val)
- 
-    return 1 - normalized_matrix
+
  
 
 import numpy as np
@@ -120,11 +106,7 @@ random_state: random seed
         featurizer.featurize(dataset, inplace=True)
         dataset.to_csv(f"{featurizer.__class__.__name__}_fp.csv")
 
-        distances = compute_all_distances(dataset) # Calcula todas as similaridades entre as moleculas
-        max_value = np.max(distances)
-        np.save(f"{featurizer.__class__.__name__}_distance_max_value.txt", max_value) 
-           
-        similarities = normalize_similarity_matrix(distances) # Normaliza esses valores
+        similarities = compute_all_similarities(dataset) # Calcula todas as similaridades entre as moleculas
 
         similarity_matrices.append(similarities) # Guarda as similaridades de cada método
 
